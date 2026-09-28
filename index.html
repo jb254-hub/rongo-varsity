@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Rongo University Portal</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        width: 95%;
+        max-width: 700px;
+        text-align: center;
+    }
+
+    h1 {
+        color: #123b70;
+        margin-bottom: 10px;
+        font-size: 30px;
+    }
+
+    .subtitle {
+        color: #777;
+        margin-bottom: 30px;
+    }
+
+    .portals {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .portal {
+        background: white;
+        border: none;
+        border-radius: 15px;
+        padding: 35px 20px;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: 0.2s;
+        font-size: 18px;
+        font-weight: bold;
+        color: #123b70;
+    }
+
+    .portal:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.13);
+        background: #123b70;
+        color: white;
+    }
+
+    .icon {
+        font-size: 38px;
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    /* Change portal button */
+
+    .change {
+        margin-top: 28px;
+    }
+
+    .change button {
+        background: none;
+        border: none;
+        color: #123b70;
+        cursor: pointer;
+        font-size: 15px;
+        text-decoration: underline;
+    }
+
+    .change button:hover {
+        color: #0a6cff;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 600px) {
+
+        .portals {
+            grid-template-columns: 1fr;
+        }
+
+        h1 {
+            font-size: 25px;
+        }
+
+    }
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>Rongo University</h1>
+
+    <div class="subtitle">
+        Select a system to continue
+    </div>
+
+
+    <!-- PORTAL OPTIONS -->
+
+    <div class="portals">
+
+        <button class="portal"
+                onclick="selectPortal('student')">
+
+            <span class="icon">🎓</span>
+
+            Student Portal
+
+        </button>
+
+
+        <button class="portal"
+                onclick="selectPortal('elearning')">
+
+            <span class="icon">📚</span>
+
+            E-Learning Portal
+
+        </button>
+
+
+        <button class="portal"
+                onclick="selectPortal('staff')">
+
+            <span class="icon">👤</span>
+
+            Staff Portal
+
+        </button>
+
+
+        <button class="portal"
+                onclick="selectPortal('website')">
+
+            <span class="icon">🌐</span>
+
+            University Website
+
+        </button>
+
+    </div>
+
+
+    <!-- CHANGE DEFAULT PORTAL -->
+
+    <div class="change">
+
+        <button onclick="changePortal()">
+            Change my default portal
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+    ==========================================
+    OFFICIAL PORTAL LINKS
+    ==========================================
+    */
+
+    const portals = {
+
+        student:
+            "https://students.rongovarsity.ac.ke/",
+
+        elearning:
+            "https://elearning.rongovarsity.ac.ke/login/",
+
+        staff:
+            "https://portal.rongovarsity.ac.ke/",
+
+        website:
+            "https://www.rongovarsity.ac.ke/"
+
+    };
+
+
+    /*
+    ==========================================
+    SELECT A PORTAL
+    ==========================================
+    */
+
+    function selectPortal(type) {
+
+        /*
+        Save the user's new default portal.
+        */
+
+        localStorage.setItem(
+            "preferredPortal",
+            type
+        );
+
+
+        /*
+        Go to the selected official portal.
+        */
+
+        window.location.href =
+            portals[type];
+
+    }
+
+
+    /*
+    ==========================================
+    CHANGE DEFAULT PORTAL
+    ==========================================
+
+    When the user clicks "Change my default
+    portal", we remove the saved preference.
+
+    The user can then choose another portal.
+    */
+
+    function changePortal() {
+
+        localStorage.removeItem(
+            "preferredPortal"
+        );
+
+
+        /*
+        Reload the gateway so the user can
+        select a new default.
+        */
+
+        window.location.reload();
+
+    }
+
+
+    /*
+    ==========================================
+    AUTOMATIC LOGIN/PORTAL REDIRECT
+    ==========================================
+
+    If a preferred portal exists, automatically
+    redirect to it.
+
+    The "change=true" URL parameter prevents
+    automatic redirection while the user is
+    choosing a new portal.
+    */
+
+    window.onload = function() {
+
+        const preferred =
+            localStorage.getItem(
+                "preferredPortal"
+            );
+
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const changing =
+            params.get("change");
+
+
+        if (
+            preferred &&
+            portals[preferred] &&
+            changing !== "true"
+        ) {
+
+            window.location.href =
+                portals[preferred];
+
+        }
+
+    };
+
+</script>
+
+</body>
+</html>
